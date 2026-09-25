@@ -29,7 +29,14 @@ namespace MetropolisBuildingRules
             group.AddCheckbox("Enable rules / Attiva regole", Settings.Enabled,
                 delegate(bool value) { Settings.Enabled = value; });
             group.AddSlider("Preferred maximum height (m) / Altezza massima preferita", 8f, 300f, 1f,
-                Settings.MaximumHeight, delegate(float value) { Settings.MaximumHeight = value; });
+                Settings.MaximumHeight, delegate(float value) {
+                    Settings.MaximumHeight = value;
+                    Settings.MinimumHeight = Math.Min(Settings.MinimumHeight, value);
+                });
+            group.AddSlider("Preferred minimum height (m) / Altezza minima preferita", 0f, 300f, 1f,
+                Settings.MinimumHeight, delegate(float value) {
+                    Settings.MinimumHeight = Math.Min(value, Settings.MaximumHeight);
+                });
             group.AddTextfield("Asset name contains / Nome asset contiene", Settings.NameContains,
                 delegate(string value) { Settings.NameContains = value ?? string.Empty; });
         }
@@ -39,6 +46,7 @@ namespace MetropolisBuildingRules
     {
         public static bool Enabled;
         public static float MaximumHeight = 60f;
+        public static float MinimumHeight;
         public static string NameContains = string.Empty;
     }
 
@@ -153,7 +161,7 @@ namespace MetropolisBuildingRules
             }
             if (vanillaIndex < 0) return; // Another mod may have selected a special asset.
             int selected = RuleEngine.Choose(compatible.Candidates, vanillaIndex, __result.m_size.y,
-                Settings.MaximumHeight, Settings.NameContains);
+                Settings.MinimumHeight, Settings.MaximumHeight, Settings.NameContains);
             if (selected >= 0 && selected < compatible.Infos.Count) __result = compatible.Infos[selected];
         }
     }

@@ -22,10 +22,19 @@ namespace MetropolisBuildingRules
         public static int Choose(IList<BuildingCandidate> candidates, int vanillaIndex,
             float vanillaHeight, float maximumHeight, string nameContains)
         {
+            return Choose(candidates, vanillaIndex, vanillaHeight, 0, maximumHeight, nameContains);
+        }
+
+        public static int Choose(IList<BuildingCandidate> candidates, int vanillaIndex,
+            float vanillaHeight, float minimumHeight, float maximumHeight, string nameContains)
+        {
             if (candidates == null) throw new ArgumentNullException("candidates");
+            if (float.IsNaN(minimumHeight) || minimumHeight < 0) throw new ArgumentOutOfRangeException("minimumHeight");
             if (float.IsNaN(maximumHeight) || maximumHeight < 0) throw new ArgumentOutOfRangeException("maximumHeight");
+            if (maximumHeight > 0 && minimumHeight > maximumHeight) return vanillaIndex;
             string keyword = (nameContains ?? string.Empty).Trim();
-            bool vanillaFits = (maximumHeight == 0 || vanillaHeight <= maximumHeight) &&
+            bool vanillaFits = vanillaHeight >= minimumHeight &&
+                (maximumHeight == 0 || vanillaHeight <= maximumHeight) &&
                 (keyword.Length == 0 || ContainsName(candidates, vanillaIndex, keyword));
             if (vanillaFits) return vanillaIndex;
 
@@ -34,6 +43,7 @@ namespace MetropolisBuildingRules
             foreach (BuildingCandidate candidate in candidates)
             {
                 if (float.IsNaN(candidate.HeightMeters) || candidate.HeightMeters <= 0) continue;
+                if (candidate.HeightMeters < minimumHeight) continue;
                 if (maximumHeight > 0 && candidate.HeightMeters > maximumHeight) continue;
                 if (keyword.Length > 0 && candidate.Name.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) < 0) continue;
                 float distance = Math.Abs(candidate.HeightMeters - vanillaHeight);

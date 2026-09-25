@@ -1,0 +1,17 @@
+# Citystate Metropolis comparison / Confronto con Citystate Metropolis
+
+Sources checked on 2026-09-26: [Steam product page](https://store.steampowered.com/app/2828020/Citystate_Metropolis/) and [developer update, 2025-02-07](https://www.citystategame.com/post/citystate-metropolis-development-update-and-first-screenshots). Steam says the game is not yet available, with a planned 2026 release. Treat its descriptions as developer plans/claims, not measured gameplay. This independent CS1 mod uses no Citystate code, art, or branding.
+
+Fonti verificate il 26-09-2026: [pagina Steam](https://store.steampowered.com/app/2828020/Citystate_Metropolis/) e [aggiornamento del 07-02-2025](https://www.citystategame.com/post/citystate-metropolis-development-update-and-first-screenshots). Steam indica che il gioco non è ancora disponibile e prevede il 2026. Le descrizioni sono progetti/dichiarazioni dello sviluppatore, non giocabilità misurata. Questa mod CS1 indipendente non usa codice, immagini o marchi Citystate.
+
+| Citystate feature / Funzione | CS1 route / Percorso CS1 | Current evidence / Evidenza attuale |
+| --- | --- | --- |
+| Building height / Altezza | Filter loaded growable prefabs by `BuildingInfo.m_size.y` / Filtrare prefab growable caricati per dimensione | Opt-in min/max range for future spawns; not exact floors / Intervallo min/max facoltativo per nuove costruzioni; non piani esatti |
+| Styles, colors, shapes / Stili, colori, forme | Explicit asset sets, district/lot profiles, asset variants / Set di asset espliciti, profili per distretto/lotto, varianti | Only asset-name substring today / Oggi solo filtro sul nome asset |
+| Lot footprint, setbacks, parking / Impronta, arretramenti, parcheggi | Match existing prefab size to [terrain lot](https://github.com/CitiesSkylines-addons/metropolis-terrain-lots) plan; reserve cells or add props where safe / Associare prefab al lotto; riservare celle o aggiungere prop quando sicuro | Not implemented / Non implementato |
+| Procedural buildings / Edifici procedurali | Separate asset/mesh generation pipeline with LOD, materials, save/load and collision tests / Pipeline distinta per mesh, LOD, materiali, salvataggio e collisioni | Feasibility research only / Solo studio di fattibilità |
+| Regulations affecting affordability, demographics and economy / Regole che incidono su costo, demografia ed economia | Separate simulation adapter with benchmark and compatibility matrix / Adattatore di simulazione separato con benchmark e compatibilità | Not implemented / Non implementato |
+
+The installed CS1 `BuildingManager.GetRandomBuildingInfo` accepts service, subservice, level, width, length, zoning mode and style. It does **not** receive a lot coordinate. That is why this mod cannot currently apply a rule to one drawn polygon: a safe bridge needs to identify the spawn site in the game's zone-growth path, then pass a validated lot ID to the asset selector. Returning a different prefab alone cannot resize its mesh or convert CS1 to Citystate's crowd simulation.
+
+`BuildingManager.GetRandomBuildingInfo` in CS1 riceve servizio, sottoservizio, livello, larghezza, profondità, modalità di zoning e stile. **Non** riceve la posizione del lotto. Per questo la mod non può oggi applicare una regola a un singolo poligono: serve riconoscere il sito nel percorso di crescita delle zone e passare un ID lotto verificato al selettore asset. Sostituire un prefab non ne cambia la mesh e non trasforma la simulazione di CS1 in quella per gruppi di Citystate.

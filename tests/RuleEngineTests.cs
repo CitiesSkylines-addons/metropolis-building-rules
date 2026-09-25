@@ -17,6 +17,8 @@ public static class RuleEngineTests
         Check(RuleEngine.Choose(pool, 0, 90, 30, "European") == 2, "height and keyword");
         Check(RuleEngine.Choose(pool, 0, 90, 10, "") == 0, "no candidate fallback");
         Check(RuleEngine.Choose(pool, 0, 90, 0, "modern") == 0, "keyword no limit");
-        Console.WriteLine("5 building rule checks passed");
+        Check(RuleEngine.Choose(pool, 2, 20, 40, 60, "European") == 1, "height interval selects midrise");
+        Check(RuleEngine.Choose(pool, 2, 20, 40, 60, "Modern") == 2, "interval fallback");
+        Console.WriteLine("7 building rule checks passed");
     }
 }
